@@ -5,11 +5,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Thêm sửa xóa với Ajax trong Laravel</title>
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{URL::asset('css/app1.min.css')}}">
+{{--    <link rel="stylesheet" href="{{URL::asset('css/app1.min.css')}}">--}}
     <script src="{{URL::asset('js/jquery.min.js')}}"></script>
     <style>
         input[type="text"]:focus {
-            outline: none;
+            outline: 0 !important;
+            box-shadow: none;
+            background: none;
+            color: white;
+        }
+        textarea, select:focus {
+            outline: 0 !important;
+            box-shadow: none !important;
+            background: none !important;
+            color: white !important;
+        }
+        body{
+            color: white;
+        }
+        .style{
+            background: none;
+            border:none;
+            border-bottom: 1px solid white;
+            color: white;
+            border-radius: 0px !important;
         }
     </style>
 </head>
@@ -21,24 +40,32 @@
             <div class="col-md-12 ">
                 <div class="col-md-9 center">
                     <h3>Form Thêm Dữ Liệu</h3>
+                    @if(Auth::check())
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                            Logout
+                        </a>
+                        <form id="frm-logout" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    @endif
+                </div>
+                <div class="alert alert-danger print-error-msg" style="display:none; background: #e74c3c; border-color: #e74c3c">
+                    <ul></ul>
+                </div>
+                <div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-5 ">
                         <div class="form-group">
                             <label >Name</label>
-                            <input type="text" style="border-radius: 0px !important;" class="form-control" name="name" id="name" >
-                            @if($errors->has('name'))
-                                <i  style="color:red;">{{$errors->first('name')}}</i>
-                            @endif
+                            <input type="text" class="form-control style" name="name" id="name" >
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label >Email address</label>
-                            <input type="text" style="border-radius: 0px !important;" class="form-control" name="email" id="email" >
-                            @if($errors->has('email'))
-                                <i  style="color:red;">{{$errors->first('email')}}</i>
-                            @endif
+                            <input type="text"  class="form-control style" name="email" id="email" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -46,26 +73,21 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label >Gender </label><br>
-                            <input  type="radio" name="gender" id="gender" value="male"> &nbsp;Male &nbsp;&nbsp;&nbsp;
-                            <input  type="radio" name="gender" id="gender" value="female">&nbsp Female
-                            @if($errors->has('gender'))
-                                <i  style="color:red;">{{$errors->first('gender')}}</i>
-                            @endif
+                            <input  type="radio" name="gender" id="gender" value="Male" checked> &nbsp;Male &nbsp;&nbsp;&nbsp;
+                            <input  type="radio" name="gender" id="gender" value="Female">&nbsp Female
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label>City</label>
-                            <select name="city" id="city" class="form-control" >
+                            <select name="city" id="city" class="form-control style" style="background: none; color: white">
+                                <option value="" disabled selected>Chose Your City</option>
                                 <option style="background-color: #30336b !important;" value="Hà Nội">Hà Nội</option>
                                 <option style="background-color: #30336b !important;" value="Hồ Chí Minh">Hồ Chí Minh</option>
                                 <option style="background-color: #30336b !important;" value="Đà Nẵng">Đà Nẵng</option>
                                 <option style="background-color: #30336b !important;" value="Nha Trang">Nha Trang</option>
                                 <option style="background-color: #30336b !important;" value="Huế">Huế</option>
                             </select>
-                            @if($errors->has('city'))
-                                <i  style="color:red;">{{$errors->first('city')}}</i>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -74,15 +96,12 @@
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">Hobby</label>
                             <div class="demo-inline-wrapper">
-                                <input type="checkbox" id="hobby" name="hobby">&nbsp;Play Piano &nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" name="football">&nbsp;Football &nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" name="guitar">&nbsp;Guitar &nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" name="food">&nbsp;Food &nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" name="travel">&nbsp; Travel &nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="hobby" id="hobby" value="Piano">&nbsp;Play Piano &nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="hobby" id="football" value="Football">&nbsp;Football &nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="hobby" id="guitar" value="Guitar">&nbsp;Guitar &nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="hobby" id="food" value="Food">&nbsp;Food &nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="hobby" id="travel" value="Travel">&nbsp; Travel &nbsp;&nbsp;&nbsp;
                             </div>
-                            @if($errors->has('hobby'))
-                                <i  style="color:red;">{{$errors->first('hobby')}}</i>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -90,16 +109,14 @@
                     <div class="col-md-10">
                         <div class="form-group">
                             <label>Note</label>
-                            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
-                            @if($errors->has('note'))
-                                <i  style="color:red;">{{$errors->first('note')}}</i>
-                            @endif
+                            <textarea class="form-control style" id="note" name="note" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-10">
-                        <input type="button" id="addstaff" class="btn" style="background-color: white; outline: black" value="Send    ">
+                        <input type="button" id="addstaff" class="btn btn-outline-success"  value="Send">
+                        <input type="button" id="reset" class="btn btn-outline-light"  value="Reset">
                     </div>
 
                 </div>
@@ -122,21 +139,21 @@
                 <div class="col-md-12 ">
                     <h3>List Data</h3>
                 </div>
-                <div class="col-md-12 ">
+                <div class="col-md-12 " >
                     <table class="table" id="staffTable" style="color: white" >
                         <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col"> Email</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Event</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col"> Email</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Event</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                            <tr>
 
-                        </tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -153,6 +170,15 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            $('#reset').click(function () {
+                $('input[type=text]').val('');
+                $('input[type=radio]').val('');
+                $('select[name="city"]').val('');
+                $('input[type=checkbox]').prop('checked',false);
+                $('textarea[name="note"]').val('')
+            })
+
 
             //get data form database and show list data
             fetchRecords();
@@ -173,11 +199,17 @@
                                 var name = response['data'][i].name;
                                 var email = response['data'][i].email;
                                 var gender = response['data'][i].gender;
-                                var tr_str = "<tr>"+ //khỏi tạo biến chứa thông tin từng record
-                                                "<td><input style='background-color:  none; background: none; border:none;  color: white; max-width: 5px' type='text'   id='id_"+id+"' value='"+ id +"' disabled></td>" +
+                                var tr_str = "<tr id='list'>"+ //khỏi tạo biến chứa thông tin từng record
+                                                "<td><input style='background-color:  none; background: none; border:none;  color: white; max-width: 50px' type='text'   id='id_"+id+"' value='"+ id +"' disabled></td>" +
                                                 "<td><input style='background-color:  none; background: none; border:none; border-bottom: 1px solid white; color: white' type='text'  id='name_"+id+"' value='"+ name +"' placeholder='"+ name +"' autocomplete='off'></td>" +
                                                 "<td><input style='background-color:  none; background: none; border:none; border-bottom: 1px solid white; color: white' type='text'  id='email_"+id+"' value='"+ email +"'  placeholder='"+ email +"' autocomplete='off'></td>" +
-                                                "<td><input style='background-color:  none; background: none; border:none; border-bottom: 1px solid white; color: white' type='text'  id='gender_"+id+"' value='" + gender + "'  placeholder='"+ gender +"' autocomplete='off'></td>" +
+                                                "<td>" +
+                                                        "<select style='background-color:  none; background: none; border:none; border-bottom: 1px solid white; color: white' type='text'  id='gender_"+id+"' value='" + gender + "'  placeholder='"+ gender +"' autocomplete='off'>" +
+                                                            "<option value='"+gender+"' selected disabled>"+gender+"</option>"+
+                                                            "<option style='background-color: #30336b;' value='Male' >Male</option>"+
+                                                            "<option style='background-color: #30336b;' value='Female' >Female</option>"+
+                                                        "</select>"+
+                                                "</td>" +
                                                 "<td><a href='' class='update' data-id='"+ id +"'>Update</a>&nbsp;/&nbsp;<a href='' class='delete' data-id='"+ id +"'>Delete</a></td>"+
                                             "</tr>"
                                 $("#staffTable tbody").append(tr_str);
@@ -194,37 +226,57 @@
                 });
             }
 
+
             //thêm một bản ghi mới
             $('#addstaff').click(function () {
                 //khởi tạo và gán value thừ thẻ có id tương ứng
-                var name = $('#name').val();
-                var email = $('#email').val();
-                var gender = $('#gender').val();
-                var city = $('#city').val();
-                var hobby = $('#hobby').val();
-                var note = $('#note').val();
+                // var name = $('#name').val();
+                // var email = $('#email').val();
+                // var gender = $('#gender').val();
+                // var city = $('#city').val();
+                // var hobby = $('#hobby').val();
+                // var note = $('#note').val();
 
+
+
+                var name = $('input[name="name"]').val();
+                var email = $('input[name="email"]').val();
+                var gender = $('input[name="gender"]').val();
+                var city = $('select[name="city"]').val();
+                var hobby = $('input[type=checkbox]:checked').map(function(_, el){
+                    return $(el).val();
+                }).get();
+                var note = $('textarea[name="note"]').val();
                 if (name != '' && email != '' && gender != '' && city != '' && hobby != ''){
                     $.ajax({
                         url: 'addstaff' , //get url trong route
                         type: 'post', //kiểu post
-                        data: { name: name, email: email, gender: gender, city: city, hobby: hobby, note: note}, //gửi data qua controller
+                        data: { name: name, email: email, gender: gender, city: city, hobby: hobby.toString(), note: note}, //gửi data qua controller
                         success: function (response) {
-                            if (response > 0){
+                            if($.isEmptyObject(response.errors)){
                                 alert('Add Staff Successfully'); //thông báo nếu thành công
+
+                                setInterval(function () {
+                                    $('#tablelist').load(fetchRecords()).fadeIn("slow");
+                                }, 500);
                                 //clear tất cả input
-                                $('#name').val('');
-                                $('#email').val('');
-                                $('#gender').val('');
-                                $('#city').val('');
-                                $('#hobby').val('')
-                                $('#note').val('')
-                            }
-                            else {
-                                 alert('Fail');
+                                $('input[type=text]').val('');
+                                $('input[type=radio]').val('');
+                                $('select[name="city"]').val('');
+                                $('input[type=checkbox]').prop('checked',false);
+                                $('textarea[name="note"]').val('')
+                            }else{
+                                $(".print-error-msg").find("ul").html('');
+                                $(".print-error-msg").css('display','block');
+                                $.each( response.errors, function( key, value ) {
+                                    $(".print-error-msg").find("ul").append('<li style="list-style-type: none; color:white">'+value+'</li>');
+                                });
+                                $("div.alert").delay(3000).slideUp();
                             }
                         }
                     });
+
+
                 }
                 else{
                     alert('chưa điền đầy đủ thông tin')
@@ -243,10 +295,14 @@
                         url: 'updatestaff', //get url trong route
                         type: 'post', //kiểu post
                         data: {editid: edit_id, name: name, email: email, gender: gender}, //gửi data qua controller
-                        success: function (response) {
-                            alert(response)
+                        success: function (data) {
+                            alert('Add Staff Successfully');
+                            setInterval(function () {
+                                $('#list').load(fetchRecords()).fadeIn("slow");
+                            }, 500);
                         }
                     });
+
                 }
                 else {
                     alert('Hãy thay đổi data trước')
@@ -257,16 +313,23 @@
 
             //delete record
             $(document).on("click", ".delete", function () {
-                var delete_id = $(this).data('id'); //khởi tạo và gán dữ liệu
-                var el = this; //khởi tạo và gán dữ liệu
-                $.ajax({
-                    url: 'deletestaff/'+delete_id, //get url trong route kèm them id
-                    type: 'get', //kiểu get
-                    success: function (response) {
-                        $(el).closest("tr").remove(); //xóa bản ghi
-                        alert(response);
-                    }
-                });
+                var del_id = $(this).data('id');
+                var el = this;
+                if (confirm("Are you sure you want to delete this Record?")){
+                    $.ajax({
+                        url: 'deletestaff/' +del_id, //get url trong route
+                        type: 'get', //kiểu get
+                        success: function () {
+                            $(this).parents("#list").animate("fast").animate({
+                                opacity : "hide"
+                            }, 500);
+                        }
+                    });
+
+
+                }
+                return false
+
             });
         });
     </script>

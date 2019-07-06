@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call('lock');
+         $this->call('role');
     }
 }
 
@@ -89,6 +89,31 @@ class key extends Seeder{
             array('key'=>'key 3'),
             array('key'=>'key 4'),
             array('key'=>'key 5'),
+        ]);
+    }
+}
+
+class permissions extends Seeder{
+    public function run(){
+        DB::table('permissions')->insert([
+            array('name'=>'list-user', 'display_name'=>'Danh sách User'),
+            array('name'=>'user-add', 'display_name'=>'Thêm mới User'),
+            array('name'=>'user-edit', 'display_name'=>'Sửa User'),
+            array('name'=>'user-delete', 'display_name'=>'Xóa User'),
+            array('name'=>'role-list', 'display_name'=>'Danh sách Role'),
+            array('name'=>'role-add', 'display_name'=>'Thêm mới Role'),
+            array('name'=>'role-edit', 'display_name'=>'Sửa Role'),
+            array('name'=>'role-delete', 'display_name'=>'Xóa Role')
+        ]);
+    }
+}
+
+class role extends Seeder{
+    public function run(){
+        DB::table('roles')->insert([
+            array('name'=>'admin', 'display_name'=>'Admin'),
+            array('name'=>'content', 'display_name'=>'Content'),
+            array('name'=>'writer', 'display_name'=>'Writer'),
         ]);
     }
 }

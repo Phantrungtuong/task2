@@ -33,18 +33,4 @@ class StaffRequest extends FormRequest
 
         ];
     }
-    public function messages()
-    {
-        return [
-            'name.required'=>'Bạn không được để trống trường này',
-            'name.max'=>'Vượt quá ký tự quy định! tối đa 225 ký tự',
-            'email.required'=>'Bạn không được để trống trường này',
-            'email.email'=>'Không đúng định dạng Email',
-            'email.max'=>'Vượt quá ký tự cố định! tối đa 225 ký tự',
-            'gender.required'=>'Bạn không được để trống trường này',
-            'city.required'=>'Bạn không được để trống trường này',
-            'hobby.required'=>'Bạn không được để trống trường này',
-            'note.required'=>'Bạn không được để trống trường này',
-        ];
-    }
 }

@@ -71,11 +71,44 @@ route::group(['prefix'=>'relationship'], function (){
 //task 2
 
 Route::group(['prefix'=>'ajax'], function (){
-   Route::get('task2', function (){
-       return view('task2');
-   });
+    Route::get('ajax', ['as'=>'getajax', 'uses'=>'StaffController@getajax']);
    Route::get('getstaff', ['as'=>'getstaff', 'uses'=>'StaffController@getStaff']);
    Route::post('addstaff','StaffController@addStaff');
    Route::post('updatestaff', ['as'=>'postupdatestaff', 'uses'=>'StaffController@updateData']);
    Route::get('deletestaff/{id}', ['as'=>'getdeletestaff', 'uses'=>'StaffController@deletedata']);
 });
+
+Route::group(['prefix'=>'author'], function (){
+    Route::get('authorization', ['as'=>'getauthor', 'uses'=>'AuthorizationController@getauthor']);
+
+    Route::get('post', ['as'=>'getpost', 'uses'=>'PostController@index']);
+    Route::get('addpost', ['as'=>'getaddpost', 'uses'=>'PostController@create']);
+    Route::post('addpost', ['as'=>'postaddpost', 'uses'=>'PostController@store']);
+
+    Route::get('category',['as'=>'getcategory', 'uses'=>'CategoriesController@index']);
+    Route::get('createcategory', ['as'=>'getcreatecategory', 'uses'=>'CategoriesController@create']);
+    Route::post('createcategory', ['as'=>'postcreatecategory', 'uses'=>'CategoriesController@store']);
+
+    Route::get('tag',['as'=>'gettag', 'uses'=>'TaagController@index']);
+    Route::get('createtag', ['as'=>'getcreatetag', 'uses'=>'TaagController@create']);
+    Route::post('createtag', ['as'=>'postcreatetag', 'uses'=>'TaagController@store']);
+
+    Route::get('user',['as'=>'getuser', 'uses'=>'UserController@index']);
+    Route::get('createuser', ['as'=>'getcreateuser', 'uses'=>'UserController@create']);
+    Route::post('createuser', ['as'=>'postcreateuser', 'uses'=>'UserController@store']);
+
+    Route::get('role',['as'=>'getrole', 'uses'=>'RoleController@index']);
+    Route::get('createrole', ['as'=>'getcreaterole', 'uses'=>'RoleController@create']);
+    Route::post('createrole', ['as'=>'postcreaterole', 'uses'=>'RoleController@store']);
+
+    Route::get('permission',['as'=>'getpermission', 'uses'=>'PermissionController@index']);
+    Route::get('createpermission', ['as'=>'getcreatepermission', 'uses'=>'PermissionController@create']);
+    Route::post('createpermission', ['as'=>'postcreatepermission', 'uses'=>'PermissionController@store']);
+});
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+//author
+
+Route::get('test', 'PostController@test');
